@@ -1,7 +1,36 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Layout = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  // 🔹 Check if the user is authenticated on component mount
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        await axios.get("http://localhost:5000/api/auth/check-auth", { withCredentials: true });
+        setIsAuthenticated(true);
+      } catch {
+        setIsAuthenticated(false);
+      }
+    };
+    checkAuthStatus();
+  }, []);
+
+  // 🔹 Logout Function
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true });
+      setIsAuthenticated(false);
+      navigate("/");
+    // eslint-disable-next-line no-unused-vars
+    } catch (error) {
+      alert("Logout failed!");
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navigation Bar */}
@@ -14,19 +43,52 @@ const Layout = ({ children }) => {
               </Link>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/test" className="text-gray-700 hover:text-blue-600">Test</Link>
-              <Link to="/courses" className="text-gray-700 hover:text-blue-600">Courses</Link>
-              <Link to="/dashboard" className="text-gray-700 hover:text-blue-600">Dashboard</Link>
-              <Link to="/login" className="text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700">Login</Link>
+            <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `hover:text-blue-600 ${isActive ? "text-blue-600" : "text-gray-700"}`
+                }
+              >
+                Home
+              </NavLink>
+
+              <NavLink
+                to="/test"
+                className={({ isActive }) =>
+                  `hover:text-blue-600 ${isActive ? "text-blue-600" : "text-gray-700"}`
+                }
+              >
+                Test
+              </NavLink>
+
+              <NavLink
+                to="/courses"
+                className={({ isActive }) =>
+                  `hover:text-blue-600 ${isActive ? "text-blue-600" : "text-gray-700"}`
+                }
+              >
+                Courses
+              </NavLink> 
+              
+              {isAuthenticated ? (
+                <button
+                  onClick={handleLogout}
+                  className="text-white bg-red-600 px-4 py-2 rounded-md hover:bg-red-700 cursor-pointer"
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link to="/login" className="text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 cursor-pointer">
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className="flex-grow">
-        {children}
-      </main>
+      <main className="flex-grow">{children}</main>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white">
@@ -55,15 +117,9 @@ const Layout = ({ children }) => {
             <div>
               <h4 className="font-semibold mb-4">Follow Us</h4>
               <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white text-2xl">
-                  <i className="fab fa-facebook"></i>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white text-2xl">
-                  <i className="fab fa-instagram"></i>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white text-2xl">
-                  <i className="fab fa-linkedin"></i>
-                </a>
+                <a href="#" className="text-gray-400 hover:text-white text-2xl"><i className="fab fa-facebook"></i></a>
+                <a href="#" className="text-gray-400 hover:text-white text-2xl"><i className="fab fa-instagram"></i></a>
+                <a href="#" className="text-gray-400 hover:text-white text-2xl"><i className="fab fa-linkedin"></i></a>
               </div>
             </div>
           </div>
@@ -76,4 +132,4 @@ const Layout = ({ children }) => {
   );
 };
 
-export default Layout; 
+export default Layout;

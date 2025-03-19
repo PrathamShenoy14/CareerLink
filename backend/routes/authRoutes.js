@@ -8,5 +8,8 @@ router.post("/register", register);
 router.post("/login", login);
 router.post("/google-login", googleLogin);
 router.post("/logout", authMiddleware, logout);
+router.get("/check-auth", authMiddleware, (req, res) => {
+    res.json({ isAuthenticated: true });
+});
 
 export default router;

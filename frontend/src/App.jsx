@@ -11,8 +11,6 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/login" element={<AuthPage />} />
-        <Route path="/signup" element={<AuthPage />} />
-        {/* Add more routes as needed */}
       </Routes>
     </Router>
   );

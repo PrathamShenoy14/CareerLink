@@ -1,47 +1,96 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
-import Layout from '../components/Layout';
-import LoginForm from '../components/LoginForm';
-import SignupForm from '../components/SignupForm';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import LoginForm from "../components/LoginForm.jsx";
+import SignupForm from "../components/SignupForm.jsx";
+// Import the local image
+import login from "../assets/login.svg"; // Adjust path if needed
 
 const AuthPage = () => {
-  const location = useLocation();
-  const isLoginPage = location.pathname === '/login';
+  const [mode, setMode] = useState("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSignup = async () => {
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/register", {
+        email,
+        password,
+      });
+      alert(res.data.message);
+      setMode("login");
+    } catch (error) {
+      alert("Signup failed! " + error.response?.data?.message || "Unknown error");
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      // eslint-disable-next-line no-unused-vars
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password,
+      }, { withCredentials: true }); // ✅ Allow sending cookies
+  
+      alert("Login successful!");
+      navigate("/");
+    } catch (error) {
+      alert("Login failed! " + (error.response?.data?.message || "Unknown error"));
+    }
+  };
+
+  const handleGoogleLogin = async (credentialResponse) => {
+    try {
+      await axios.post("http://localhost:5000/api/auth/google-login", {
+        token: credentialResponse.credential,
+      }, { withCredentials: true }); // ✅ Allow sending cookies
+  
+      alert("Google Login successful!");
+      navigate("/");
+    } catch (error) {
+      alert("Google Login failed! " + (error.response?.data?.message || "Unknown error"));
+    }
+  };
 
   return (
-    <Layout>
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {isLoginPage ? 'Sign in to your account' : 'Create your account'}
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            {isLoginPage ? (
-              <>
-                Or{' '}
-                <a href="/signup" className="font-medium text-blue-600 hover:text-blue-500">
-                  create a new account
-                </a>
-              </>
-            ) : (
-              <>
-                Already have an account?{' '}
-                <a href="/login" className="font-medium text-blue-600 hover:text-blue-500">
-                  Sign in
-                </a>
-              </>
-            )}
-          </p>
-        </div>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <div className="flex h-screen bg-gray-900 justify-center items-center">
+        <div className="w-2/6 mx-6 flex flex-col justify-center items-center bg-gray-900 text-white p-8 border-2 border-gray-700 rounded-2xl shadow-2xl transform transition-all duration-300 hover:shadow-3xl">
+          {mode === "login" ? (
+            <LoginForm setMode={setMode} email={email} setEmail={setEmail} password={password} setPassword={setPassword} handleLogin={handleLogin} />
+          ) : (
+            <SignupForm setMode={setMode} email={email} setEmail={setEmail} password={password} setPassword={setPassword} confirmPassword={confirmPassword} setConfirmPassword={setConfirmPassword} handleSignup={handleSignup} />
+          )}
 
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            {isLoginPage ? <LoginForm /> : <SignupForm />}
+          <div className="flex items-center w-full my-5">
+            <hr className="flex-grow border-gray-600" />
+            <span className="mx-3 text-gray-400 text-sm">OR</span>
+            <hr className="flex-grow border-gray-600" />
+          </div>
+
+          <div className="w-full">
+            <div className="w-full bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 p-2">
+              <GoogleLogin
+                onSuccess={handleGoogleLogin}
+                onError={() => alert("Google login failed!")}
+                className="w-full"
+              />
+            </div>
           </div>
         </div>
+        <div className="w-4/6 h-screen">
+          <img src={login} alt="Auth" className="w-full h-full object-cover rounded-lg shadow-xl" />
+        </div>
       </div>
-    </Layout>
+    </GoogleOAuthProvider>
   );
 };
 
-export default AuthPage; 
+export default AuthPage;
