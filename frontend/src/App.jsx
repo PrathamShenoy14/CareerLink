@@ -1,16 +1,20 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AuthPage from "./AuthPage.jsx"// Make sure this path is correct
-import HomePage from "./HomePage.jsx";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import CoursesPage from './pages/CoursesPage';
+import AuthPage from './pages/AuthPage';
 
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/courses" element={<CoursesPage />} />
         <Route path="/login" element={<AuthPage />} />
-        <Route path="/dashboard" element={<h2>Welcome to Dashboard</h2>} />
+        <Route path="/signup" element={<AuthPage />} />
+        {/* Add more routes as needed */}
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 

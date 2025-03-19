@@ -4,28 +4,112 @@ import { Link } from 'react-router-dom';
 const HomePage = () => {
   const courses = [
     {
-      name: "Career Development Fundamentals",
-      provider: "CareerLink Academy",
-      description: "Master the basics of career planning and development",
-      difficulty: "Beginner",
-      icon: "📚"
+        name: "Career Development Fundamentals",
+        provider: "CareerLink Academy",
+        description: "Master the basics of career planning and development",
+        difficulty: "Beginner",
+        icon: "📚"
     },
     {
-      name: "Professional Resume Writing",
-      provider: "Resume Experts",
-      description: "Learn to craft compelling resumes that get noticed",
-      difficulty: "Intermediate",
-      icon: "📝"
+        name: "Professional Resume Writing",
+        provider: "Resume Experts",
+        description: "Learn to craft compelling resumes that get noticed",
+        difficulty: "Intermediate",
+        icon: "📝"
     },
     {
-      name: "Interview Mastery",
-      provider: "CareerLink Pro",
-      description: "Ace your interviews with confidence",
-      difficulty: "Advanced",
-      icon: "🎯"
+        name: "Interview Mastery",
+        provider: "CareerLink Pro",
+        description: "Ace your interviews with confidence",
+        difficulty: "Advanced",
+        icon: "🎯"
     },
-    // Add more courses here...
+    {
+        name: "LinkedIn Networking Strategies",
+        provider: "SocialPro Academy",
+        description: "Optimize your LinkedIn profile and build strong connections",
+        difficulty: "Beginner",
+        icon: "🔗"
+    },
+    {
+        name: "Effective Cover Letter Writing",
+        provider: "Resume Experts",
+        description: "Write persuasive cover letters that stand out",
+        difficulty: "Intermediate",
+        icon: "✉️"
+    },
+    {
+        name: "Salary Negotiation Tactics",
+        provider: "Career Growth Hub",
+        description: "Learn to negotiate your salary with confidence",
+        difficulty: "Advanced",
+        icon: "💰"
+    },
+    {
+        name: "Personal Branding for Job Seekers",
+        provider: "Brand Yourself Academy",
+        description: "Build a strong personal brand to attract opportunities",
+        difficulty: "Intermediate",
+        icon: "🌟"
+    },
+    {
+        name: "Time Management for Professionals",
+        provider: "Productivity Experts",
+        description: "Enhance productivity and manage time effectively",
+        difficulty: "Beginner",
+        icon: "⏳"
+    },
+    {
+        name: "Networking for Career Success",
+        provider: "CareerLink Pro",
+        description: "Develop networking skills to unlock career growth",
+        difficulty: "Intermediate",
+        icon: "🤝"
+    },
+    {
+        name: "Public Speaking & Communication Skills",
+        provider: "Speaking Academy",
+        description: "Overcome fear and become a confident speaker",
+        difficulty: "Advanced",
+        icon: "🎤"
+    },
+    {
+        name: "Workplace Conflict Resolution",
+        provider: "HR Insights",
+        description: "Learn strategies to handle workplace conflicts effectively",
+        difficulty: "Intermediate",
+        icon: "⚖️"
+    },
+    {
+        name: "Job Search Strategies",
+        provider: "Career Growth Hub",
+        description: "Discover modern job search techniques",
+        difficulty: "Beginner",
+        icon: "🔍"
+    },
+    {
+        name: "Freelancing & Gig Economy Mastery",
+        provider: "Freelance Pros",
+        description: "Start and grow your freelance career successfully",
+        difficulty: "Advanced",
+        icon: "💼"
+    },
+    {
+        name: "Emotional Intelligence at Work",
+        provider: "Mindful Careers",
+        description: "Develop emotional intelligence to excel in the workplace",
+        difficulty: "Intermediate",
+        icon: "🧠"
+    },
+    {
+        name: "Leadership & Team Management",
+        provider: "Leadership Academy",
+        description: "Become a great leader and manage teams effectively",
+        difficulty: "Advanced",
+        icon: "🚀"
+    }
   ];
+
 
   const testimonials = [
     {
