@@ -91,7 +91,7 @@ const uploadUserReport = async (req, res) => {
 
     // 🔹 Step 1: Delete existing PDF if it exists
     if (user.reportURL) {
-      const publicId = user.reportURL.split("/").pop().split(".")[0]; // Extract filename
+      const publicId = user.reportURL.split("/").pop().split(".")[0]+".pdf"; // Extract filename
       await deletePDF(publicId);
     }
 

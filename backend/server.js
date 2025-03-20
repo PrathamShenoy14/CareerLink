@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import cookieParser from "cookie-parser";
+import predictCareerRoute from './routes/predictCareer.js'
 
 dotenv.config();
 const app = express();
@@ -21,6 +22,7 @@ connectDB();
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/predict-career", predictCareerRoute);
 
 // Start Server
 app.listen(5000, () => console.log("Server running on port 5000"));
