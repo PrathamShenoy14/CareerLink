@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   password: String, // Only for normal login
   googleId: String, // Only for Google login
+  reportURL: String,
 });
 
 const User = mongoose.model("User",UserSchema);

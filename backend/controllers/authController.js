@@ -2,6 +2,8 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
+import { uploadPDF, deletePDF } from "../utils/cloudinary.js";
+import { sendEmailWithPDF } from "../utils/email.js";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -80,4 +82,57 @@ const logout = (req, res) => {
   res.json({ message: "Logged out successfully" });
 };
 
-export { register, login, googleLogin, logout };
+const uploadUserReport = async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+
+    const user = await User.findById(req.user.userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // 🔹 Step 1: Delete existing PDF if it exists
+    if (user.reportURL) {
+      const publicId = user.reportURL.split("/").pop().split(".")[0]; // Extract filename
+      await deletePDF(publicId);
+    }
+
+    // 🔹 Step 2: Upload new PDF
+    const pdfBuffer = req.file.buffer;
+    const cloudinaryURL = await uploadPDF(pdfBuffer);
+
+    // 🔹 Step 3: Save new report URL
+    user.reportURL = cloudinaryURL;
+    await user.save();
+
+    // 🔹 Step 4: Send Email with PDF
+    await sendEmailWithPDF(
+      user.email,
+      "Your Career Personality Report",
+      "Attached is your career aptitude test result.",
+      cloudinaryURL
+    );
+
+    res.json({ message: "PDF uploaded & emailed successfully", reportURL: cloudinaryURL });
+  } catch (error) {
+    console.error("Upload Error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const deleteUserReport = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId);
+    if (!user || !user.reportURL) return res.status(404).json({ message: "Report not found" });
+
+    const publicId = user.reportURL.split("/").pop().split(".")[0]+".pdf"; // Extract Cloudinary ID
+    await deletePDF(publicId);
+
+    user.reportURL = null;
+    await user.save();
+
+    res.json({ message: "PDF deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export { register, login, googleLogin, logout, uploadUserReport, deleteUserReport};
