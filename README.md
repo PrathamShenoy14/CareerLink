@@ -26,7 +26,10 @@
 
 ### Steps to Install and Run
 
-1. Clone the repository  
+1. Clone the repository
+    ```
+    git clone "https://github.com/PrathamShenoy14/CareerLink"
+    ``` 
 
 2. Install dependencies  
 - Navigate to the `client` folder and install frontend dependencies:  
